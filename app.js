@@ -1,3 +1,4 @@
+require("dotenv").config();
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
@@ -16,7 +17,7 @@ var Issue = require('./models/Issue');
 var Comment = require('./models/Comment');
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb+srv://admin:dbUserPassword@cluster0.ykhfb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify:false, useCreateIndex: true});
+mongoose.connect(process.env.DBURL, {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify:false, useCreateIndex: true});
 
 var db = mongoose.connection;
 
@@ -49,6 +50,7 @@ app.use((req, res, next) => {
 });
 
 app.get('/', (req, res) => {
+    //add find to pass as parameter in index file
 
     College.find({}, (err, foundCollege)=> {
                     
@@ -62,7 +64,6 @@ app.get('/', (req, res) => {
             }
         })
     })
-
 })
 
 app.get('/home', isLoggedIn , (req, res) => {
@@ -216,7 +217,6 @@ app.put('/checkup/:id/reject', (req,res) => {
 })
 
 // Arrival
-
 app.post('/request_arrival', isLoggedIn, (req, res)=> {
 
     var newArrival = new Arrival({
