@@ -115,12 +115,14 @@ app.get('/projects',isLoggedIn, (req, res)=> {
 })
 
 app.get('/register', (req, res) => {
-
-    College.find({}, (err, colleges) => {
-
-        res.render("register", {colleges:colleges});
-
-    })
+    if(req.user){
+        res.redirect("/home");
+    }else{
+        College.find({}, (err, colleges) => {
+            res.render("register", {colleges:colleges});
+    
+        })
+    }    
 })
 
 app.post('/register', (req, res) => {
@@ -144,7 +146,11 @@ app.post('/register', (req, res) => {
 })
 
 app.get('/login', (req, res) => {
-    res.render("login");
+    if(req.user){
+        res.redirect('/home');
+    }else{
+        res.render("login");
+    }
 })
 
 app.post('/login', passport.authenticate('local',
